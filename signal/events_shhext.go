@@ -17,6 +17,12 @@ const (
 
 	// EventMailServerRequestExpired is triggered when request TTL ends
 	EventMailServerRequestExpired = "mailserver.request.expired"
+
+	// EventMailServerDiscoveryCompleted is tiggered when mailsever discovery has been completed.
+	EventMailServerDiscoveryCompleted = "mailserver.discovery.completed"
+
+	// EventMailServerDiscoveryErrored is triggered when mailserver discovery has finished unexpectedly.
+	EventMailServerDiscoveryErrored = "mailserver.discovery.errored"
 )
 
 // EnvelopeSignal includes hash of the envelope.
@@ -54,4 +60,14 @@ func SendMailServerRequestCompleted(requestID common.Hash, lastEnvelopeHash comm
 // SendMailServerRequestExpired triggered when mail server request expires
 func SendMailServerRequestExpired(hash common.Hash) {
 	send(EventMailServerRequestExpired, EnvelopeSignal{hash})
+}
+
+// SendMailServerDiscoveryCompleted tiggered when mailsever discovery has been completed.
+func SendMailServerDiscoveryCompleted(mailservers []string) {
+	send(EventMailServerDiscoveryCompleted, mailservers)
+}
+
+// SendMailServerDiscoveryErrored triggered when mailserver discovery has finished unexpectedly.
+func SendMailServerDiscoveryErrored() {
+	send(EventMailServerDiscoveryErrored, nil)
 }

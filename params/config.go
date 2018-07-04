@@ -655,3 +655,11 @@ func (c *NodeConfig) FormatAPIModules() []string {
 func (c *NodeConfig) AddAPIModule(m string) {
 	c.APIModules = fmt.Sprintf("%s,%s", c.APIModules, m)
 }
+
+// IsMailServerEnabled check if whisper mailserver is enabled.
+func (c *NodeConfig) IsMailServerEnabled() bool {
+	if c.WhisperConfig == nil {
+		return false
+	}
+	return c.WhisperConfig.Enabled
+}

@@ -41,6 +41,9 @@ const (
 	DefaultTopicStopSearchDelay = 10 * time.Second
 )
 
+// CompletedDiscoveryHandler handles completed discovery process by topic.
+type CompletedDiscoveryHandler func(*TopicPool)
+
 // Options is a struct with PeerPool configuration.
 type Options struct {
 	FastSync time.Duration
@@ -52,6 +55,8 @@ type Options struct {
 	// TopicStopSearchDelay time stopSearch will be waiting for max cached peers to be
 	// filled before really stopping the search.
 	TopicStopSearchDelay time.Duration
+	// CompletedDiscoveryHandler peerpool will call this function whenever a topic stops discovery.
+	CompletedDiscoveryHandler CompletedDiscoveryHandler
 }
 
 // NewDefaultOptions returns a struct with default Options.
@@ -274,6 +279,9 @@ func (p *PeerPool) handleStopTopics() {
 	for _, t := range p.topics {
 		if t.readyToStopSearch() {
 			t.StopSearch()
+			if p.opts.CompletedDiscoveryHandler != nil {
+				p.opts.CompletedDiscoveryHandler(t)
+			}
 		}
 	}
 	if p.allTopicsStopped() {
